@@ -2,9 +2,13 @@ import { useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import Aircraft from '../experience/Aircraft';
+import Atmosphere from '../experience/Atmosphere';
 import CameraRig from '../experience/CameraRig';
+import Clouds from '../experience/Clouds';
+import Environment from '../experience/Environment';
 import FlightPathDebug from '../experience/FlightPathDebug';
 import SceneText from '../experience/SceneText';
+import WindStreaks from '../experience/WindStreaks';
 import ProgressAnnouncer from '../components/ProgressAnnouncer';
 import { updateProgress, type ProgressStore } from '../animation/progressStore';
 import { createAircraftState } from '../experience/aircraftKinematics';
@@ -63,9 +67,11 @@ export default function Experience({ store, onContextLost }: ExperienceProps) {
             });
           }}
         >
-          <color attach="background" args={['#101a33']} />
-          <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
-          <directionalLight position={[6, 10, 4]} intensity={1.6} />
+          <color attach="background" args={['#0b1030']} />
+          <Atmosphere store={store} />
+          <Environment store={store} />
+          <Clouds store={store} />
+          <WindStreaks store={store} />
           <ProgressDriver store={store} progressNodeRef={progressNodeRef} />
           <Aircraft store={store} kinematicState={kinematicState} />
           <CameraRig store={store} kinematicState={kinematicState} />

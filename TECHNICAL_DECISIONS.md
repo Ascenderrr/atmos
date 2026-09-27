@@ -38,6 +38,17 @@ at exposure 1.0, set once in `Experience` `onCreated`. DOM overlays author
 against the same palette; post-processing (Phase 8) must preserve this chain
 and is the only place allowed to revisit it.
 
+The custom sky shader appends `tonemapping_fragment` + `colorspace_fragment`
+so uniform colors travel the same pipeline as built-in materials.
+
+## Lint: react-hooks/immutability vs frame loops (Phase 7)
+
+Per-frame mutation of Three.js GPU objects (uniforms, fog, material colors,
+opacity) is the idiomatic R3F pattern and cannot satisfy the new
+`react-hooks/immutability` rule without per-frame rebuilds. Targeted
+`eslint-disable-next-line` suppressions with reasons are used at those sites;
+pure logic stays in testable modules so the suppressions never cover decisions.
+
 ## Scroll architecture: custom normalized progress, no Lenis
 
 `targetProgress` (0→1) ← user input; `currentProgress` damps toward it in

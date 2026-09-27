@@ -70,7 +70,19 @@
   390px in Phase 11.
 - Commit: `phase 6: add typography`
 
-## Phase 7 — Atmosphere — NOT STARTED
+## Phase 7 — Atmosphere — VERIFIED (2026-09-27)
+
+- Verification performed: unit 50/50 (palette exactness/blending/clamping, seeded RNG +
+  cloud determinism/corridor clearance, streak mapping); night/day/dusk screenshots eyeballed
+  (gradient dome, stars, fog, palette-tracking clouds + lights, chapters compose); visual-QA
+  fixes verified (horizon band softened, sprite edge-fade, night fill lift); `format`/`lint`/
+  `typecheck`/`build` clean; e2e (below) with zero page errors.
+- Structural fixes: case-only module/component filename pairs renamed (`cloudField`,
+  `atmospherePalette`, `streaks`) — Linux-safe; targeted `react-hooks/immutability`
+  suppressions for per-frame GPU mutation (documented in TECHNICAL_DECISIONS.md).
+- Known issues: streak shimmer not frozen in a screenshot (mapping unit-tested; tune gain by feel
+  in Phase 15); scene still shader + craft + text only — post-processing lands in Phase 8.
+- Commit: `phase 7: add atmosphere`
 
 ## Phase 8 — Post-processing — NOT STARTED
 

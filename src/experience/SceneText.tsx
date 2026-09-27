@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { experienceSections } from '../config/sections';
 import { evaluateTypography, typographyTimings } from '../config/typography';
+import { clamp01 } from '../utils/clamp';
 import { getFlightCurve } from './FlightPath';
 import type { ProgressStore } from '../animation/progressStore';
 
@@ -11,6 +12,9 @@ interface ChapterSprite {
   sectionId: string;
   texture: THREE.CanvasTexture;
 }
+
+const _viewDir = new THREE.Vector3();
+const _toSprite = new THREE.Vector3();
 
 function drawChapterTexture(title: string, subtitle: string): THREE.CanvasTexture | null {
   if (typeof document === 'undefined') {
@@ -107,17 +111,24 @@ export default function SceneText({ store }: { store: ProgressStore }) {
     };
   }, [chapters]);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (!chapters) {
       return;
     }
+    camera.getWorldDirection(_viewDir);
     for (let i = 0; i < chapters.length; i += 1) {
       const node = spriteRefs.current[i];
       if (!node) {
         continue;
       }
       const timing = typographyTimings[chapters[i].sectionId];
-      node.visible = evaluateTypography(timing, store.current).opacity > 0.01;
+      const windowOpacity = evaluateTypography(timing, store.current).opacity;
+      // Fade wide sprites out toward the frame edges instead of clipping half-on.
+      _toSprite.copy(node.position).sub(camera.position).normalize();
+      const edgeFade = clamp01((_viewDir.dot(_toSprite) - 0.88) / (0.966 - 0.88));
+      const opacity = windowOpacity * edgeFade;
+      node.visible = opacity > 0.01;
+      (node.material as THREE.SpriteMaterial).opacity = opacity;
     }
   });
 

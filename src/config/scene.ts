@@ -177,3 +177,156 @@ export const cameraModes: Record<CameraMode, CameraModeConfig> = {
     transitionRange: 0.06,
   },
 };
+
+export interface AtmosphereKeyframe {
+  progress: number;
+  skyTop: string;
+  skyHorizon: string;
+  skyBottom: string;
+  fogColor: string;
+  fogNear: number;
+  fogFar: number;
+  sunColor: string;
+  sunIntensity: number;
+  hemiSky: string;
+  hemiGround: string;
+  hemiIntensity: number;
+  cloudTint: string;
+  /** 0 = no stars, 1 = full night sky. */
+  stars: number;
+}
+
+/** Original day-arc palette: indigo departure, bright midday, golden hour, rose dusk, night return. */
+export const atmosphereKeyframes: AtmosphereKeyframe[] = [
+  {
+    progress: 0,
+    skyTop: '#0b1030',
+    skyHorizon: '#27407a',
+    skyBottom: '#05070f',
+    fogColor: '#101a33',
+    fogNear: 80,
+    fogFar: 800,
+    sunColor: '#8fa8ff',
+    sunIntensity: 0.7,
+    hemiSky: '#5a6fa8',
+    hemiGround: '#141a30',
+    hemiIntensity: 0.62,
+    cloudTint: '#8d9cc8',
+    stars: 1,
+  },
+  {
+    progress: 0.2,
+    skyTop: '#1c2a5e',
+    skyHorizon: '#7a6a9e',
+    skyBottom: '#0b0e22',
+    fogColor: '#2a2a55',
+    fogNear: 80,
+    fogFar: 800,
+    sunColor: '#e8b8d8',
+    sunIntensity: 1.1,
+    hemiSky: '#8a7ab8',
+    hemiGround: '#1e1c34',
+    hemiIntensity: 0.7,
+    cloudTint: '#c8a8c8',
+    stars: 0.35,
+  },
+  {
+    progress: 0.4,
+    skyTop: '#2f6cb8',
+    skyHorizon: '#bcd6f5',
+    skyBottom: '#16283f',
+    fogColor: '#9db8dd',
+    fogNear: 90,
+    fogFar: 900,
+    sunColor: '#fff2d8',
+    sunIntensity: 1.6,
+    hemiSky: '#bcd0ff',
+    hemiGround: '#2a3450',
+    hemiIntensity: 0.9,
+    cloudTint: '#ffffff',
+    stars: 0,
+  },
+  {
+    progress: 0.6,
+    skyTop: '#2a4f9e',
+    skyHorizon: '#f5c98a',
+    skyBottom: '#1a2038',
+    fogColor: '#d8a86e',
+    fogNear: 90,
+    fogFar: 900,
+    sunColor: '#ffd9a0',
+    sunIntensity: 1.5,
+    hemiSky: '#e8c898',
+    hemiGround: '#3a2c28',
+    hemiIntensity: 0.85,
+    cloudTint: '#ffe8d0',
+    stars: 0,
+  },
+  {
+    progress: 0.8,
+    skyTop: '#3a2a6e',
+    skyHorizon: '#e88aa0',
+    skyBottom: '#120e24',
+    fogColor: '#6e4470',
+    fogNear: 80,
+    fogFar: 800,
+    sunColor: '#ff9e9e',
+    sunIntensity: 1.0,
+    hemiSky: '#9e6a9e',
+    hemiGround: '#241c30',
+    hemiIntensity: 0.65,
+    cloudTint: '#e8a8b8',
+    stars: 0.3,
+  },
+  {
+    progress: 1,
+    skyTop: '#0b1030',
+    skyHorizon: '#3a4a8a',
+    skyBottom: '#05070f',
+    fogColor: '#141c38',
+    fogNear: 80,
+    fogFar: 800,
+    sunColor: '#8fa8ff',
+    sunIntensity: 0.7,
+    hemiSky: '#5a6fa8',
+    hemiGround: '#141a30',
+    hemiIntensity: 0.62,
+    cloudTint: '#8d9cc8',
+    stars: 1,
+  },
+];
+
+export interface CloudFieldConfig {
+  seed: number;
+  cloudCount: number;
+  minBlobs: number;
+  maxBlobs: number;
+  /** Rejection distance from the flight corridor (world units). */
+  corridorClearance: number;
+}
+
+export const cloudFieldConfig: CloudFieldConfig = {
+  seed: 1337,
+  cloudCount: 26,
+  minBlobs: 3,
+  maxBlobs: 5,
+  corridorClearance: 14,
+};
+
+export interface StreakFieldConfig {
+  seed: number;
+  streakCount: number;
+  /** Progress-velocity → opacity gain for motion-reactive streaks. */
+  velocityGain: number;
+  maxOpacity: number;
+}
+
+export const streakFieldConfig: StreakFieldConfig = {
+  seed: 9241,
+  streakCount: 140,
+  velocityGain: 0.25,
+  maxOpacity: 0.55,
+};
+
+/** Fixed sun direction (normalized at use). Shared by the sky shader and lights. */
+export const sunDirection: Vec3Tuple = [0.45, 0.5, 0.3];
