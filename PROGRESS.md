@@ -94,9 +94,29 @@
   sampled angle); low-tier and mobile DPR caps/auto-degrade land in Phase 13.
 - Commit: `phase 8: add post-processing`
 
-## Phase 9 — Audio — NOT STARTED
+## Phase 9 — Audio — VERIFIED (2026-09-27)
 
-## Phase 10 — Loading / Intro / Ending — NOT STARTED
+- Verification performed: unit 11/11 (load success/error/timeout, autoplay rejection,
+  fade convergence + cancellation, mute, visibility suspend/resume, dispose, resurrect);
+  zero-audio e2e (no sound control rendered); configured path verified end-to-end in a
+  browser via a TEMPORARY local tone + manifest entry (play/pause/mute all flipped correctly),
+  then fully reverted — the committed default stays unconfigured.
+- Real bug caught by the temp check: App's dispose-on-unmount killed the audio singleton
+  under StrictMode remounts; fixed with element resurrection (`ensureElement`) + unit cover.
+- Known issues: no licensed music sourced yet (by design — placeholder phase).
+- Commit: `phase 9: add audio manager`
+
+## Phase 10 — Loading / Intro / Ending — VERIFIED (2026-09-27)
+
+- Verification performed: e2e 13/13 — ready gate, begin→intro→canvas, skip→fallback with
+  H1 focus, End→Arrived→Fly again→progress 0, zero-audio, all prior flows intact; start/end
+  screens eyeballed (GSAP entrances, focus ring, overlay/hint/skip composition); `format`/
+  `lint`/`typecheck`/`build` clean; unit 65/65.
+- Flake note: one `toBeVisible` failure on the first run after a manifest revert (cold Vite
+  recompile); three consecutive full-green runs since. Watch on CI; do not inflate timeouts
+  to hide real regressions.
+- Known issues: visibility pauses audio only — render-loop pause lands in Phase 13.
+- Commit: `phase 10: add experience state machine`
 
 ## Phase 11 — Responsive / Mobile — NOT STARTED
 

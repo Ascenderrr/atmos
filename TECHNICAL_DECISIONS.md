@@ -48,6 +48,25 @@ LOW = direct render. Verified empirically that the composer path tone-matches
 the direct path, so no extra ToneMapping effect is needed. DPR caps and
 auto-degrade belong to Phase 13, not here.
 
+## Experience state machine (Phase 10)
+
+Single `useExperienceState` hook owns every transition: loading (font gate,
+best-effort capped) → ready (user gesture) → intro (first input yields) →
+active → ending (auto at 0.985) → completed, with skipped/fallback/error exits
+to the same static content. Audio follows the same transitions (fade in on
+begin/replay, fade out on skip/ending). GSAP is scoped to DOM overlay
+entrances/exits in reverting contexts — never the 3D scene. `?progress=`
+boots straight into active for deterministic tests. Experience chunk is
+lazy-loaded behind the loading screen.
+
+## StrictMode-safe singletons (Phase 9 lesson)
+
+Root singletons (AudioManager) must survive React 19 StrictMode's
+mount-unmount-remount: App's dispose-on-unmount killed audio before any
+gesture. The manager now rebuilds its element on next use (`ensureElement`)
+instead of dying permanently — verified by a dedicated unit test and a
+temporary in-browser configured-audio pass.
+
 ## Lint: react-hooks/immutability vs frame loops (Phase 7)
 
 Per-frame mutation of Three.js GPU objects (uniforms, fog, material colors,
