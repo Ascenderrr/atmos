@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# test output
+coverage/
+playwright-report/
+test-results/
+
+# env
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# session / workspace scaffolding (never commit)
+.omo/
+.codegraph/
+
+# logs
+*.log
+npm-debug.log*

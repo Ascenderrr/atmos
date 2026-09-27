@@ -1,0 +1,55 @@
+:root {
+  --font-sans: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --ink: #eef2ff;
+  --ink-dim: #aab4d4;
+  --sky-deep: #101a33;
+  --sky-glow: #27407a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--sky-deep) 0%, var(--sky-glow) 100%);
+  min-height: 100vh;
+}
+
+.landing {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 18vh 1.5rem 4rem;
+}
+
+.kicker {
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.8rem;
+}
+
+.landing h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 6rem);
+  margin: 0.5rem 0;
+  line-height: 1;
+}
+
+.lede {
+  font-size: 1.15rem;
+  color: var(--ink-dim);
+}
+
+.build-note {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}

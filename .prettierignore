@@ -1,0 +1,9 @@
+dist/
+coverage/
+playwright-report/
+test-results/
+package-lock.json
+.omo/
+.codegraph/
+agents.md
+AGENTS.md
