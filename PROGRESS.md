@@ -26,7 +26,16 @@
   Phase 10); rendered pixels not eyeballed — full visual QA deferred to Phase 15 per plan.
 - Commit: `phase 2: add webgl foundation`
 
-## Phase 3 — Aircraft — NOT STARTED
+## Phase 3 — Aircraft — VERIFIED (2026-09-27)
+
+- Verification performed: unit 24/24 incl. 240-sample continuity (no flips, min quat dot > 0.9995),
+  bank clamp, nose-along-tangent, flipped-axis + 180°-offset mapping, vertical-path survival;
+  screenshots eyeballed at `?progress=0` (coherent stylized craft on path start, nose along route)
+  and `?showPath=1` (debug line exits through the nose, gated correctly); `format`/`lint`/
+  `typecheck`/`build` clean; e2e 3/3 with zero page errors.
+- Known issues: craft reads small in the static foundation camera — reframed by the camera rig in
+  Phase 5; main-bundle chunk warning carries over (code-split in Phase 10).
+- Commit: `phase 3: add aircraft and flight path`
 
 ## Phase 4 — Progress System — NOT STARTED
 

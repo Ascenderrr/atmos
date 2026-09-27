@@ -57,6 +57,14 @@ Placeholder is procedural geometry; a future GLB plugs in via configurable
 scale, orientation correction, and forward axis — never a hard-coded axis
 assumption; local decoder assets only, no remote CDN.
 
+Orientation math (Phase 3): `setFromUnitVectors(model forward → path
+tangent)`, then a model-space Euler correction, then roll about the tangent
+for banking; all smoothing exponential and frame-rate independent.
+Near-vertical tangents fall back to the last stable up vector. The math lives
+in a pure, allocation-free module (`aircraftKinematics.ts`) covered by unit
+tests: route-wide continuity (no flips), bank clamp, nose-along-tangent,
+flipped forward axis, 180° offset correction, and vertical-path survival.
+
 ## Quality tiers: HIGH / MEDIUM / LOW
 
 Pixel-ratio caps, cloud/particle density, shadows, post-processing intensity,

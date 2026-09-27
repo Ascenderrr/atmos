@@ -9,6 +9,7 @@ describe('parseExperienceFlags', () => {
       showPath: false,
       debug: false,
       quality: null,
+      progress: null,
     });
   });
 
@@ -30,5 +31,12 @@ describe('parseExperienceFlags', () => {
     const flags = parseExperienceFlags('?foo=bar&debug=1');
     expect(flags.debug).toBe(true);
     expect(flags.forceFallback).toBe(false);
+  });
+
+  it('parses and clamps the progress override', () => {
+    expect(parseExperienceFlags('?progress=0.35').progress).toBeCloseTo(0.35);
+    expect(parseExperienceFlags('?progress=2').progress).toBe(1);
+    expect(parseExperienceFlags('?progress=nope').progress).toBeNull();
+    expect(parseExperienceFlags('').progress).toBeNull();
   });
 });

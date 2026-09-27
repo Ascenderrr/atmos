@@ -22,3 +22,12 @@ test('?forceFallback=1 renders the static fallback with core content', async ({ 
   await expect(page.getByRole('heading', { name: 'Arrival' })).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('?progress=0&showPath=1 renders the aircraft on the debug path', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(String(error)));
+
+  await page.goto('/?progress=0&showPath=1');
+  await expect(page.locator('.experience canvas')).toBeVisible();
+  expect(errors).toEqual([]);
+});
