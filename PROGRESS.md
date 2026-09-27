@@ -58,7 +58,17 @@
 - Known issues: framing tuned against placeholder craft scale — re-check if aircraft scale changes.
 - Commit: `phase 5: add camera rig`
 
-## Phase 6 — Typography — NOT STARTED
+## Phase 6 — Typography — VERIFIED (2026-09-27)
+
+- Verification performed: unit 40/40 (timing enter/exit/ending-stay/rise-monotonic, section
+  coverage); screenshots eyeballed at 0.3/0.55 (serif DOM chapters + letterspaced 3D sprite
+  titles compose with the craft, no overlap defects); e2e chapter fade in/out by computed
+  opacity, canvas `aria-hidden` + progressbar exposure; `format`/`lint`/`typecheck`/`build` clean.
+- 3D text decision: canvas-sprite titles with the bundled webfont (troika needs a CDN font or an
+  untracked binary — both rejected); decorative layer self-drops on any failure.
+- Known issues: mobile type sizes use clamp() but are eyeballed only at desktop — re-verify at
+  390px in Phase 11.
+- Commit: `phase 6: add typography`
 
 ## Phase 7 — Atmosphere — NOT STARTED
 

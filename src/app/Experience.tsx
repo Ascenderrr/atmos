@@ -4,18 +4,16 @@ import * as THREE from 'three';
 import Aircraft from '../experience/Aircraft';
 import CameraRig from '../experience/CameraRig';
 import FlightPathDebug from '../experience/FlightPathDebug';
+import SceneText from '../experience/SceneText';
 import ProgressAnnouncer from '../components/ProgressAnnouncer';
-import {
-  createProgressStore,
-  updateProgress,
-  type ProgressStore,
-} from '../animation/progressStore';
+import { updateProgress, type ProgressStore } from '../animation/progressStore';
 import { createAircraftState } from '../experience/aircraftKinematics';
 import { progressSmoothing } from '../config/scene';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { getExperienceFlags } from '../utils/searchParams';
 
 interface ExperienceProps {
+  store: ProgressStore;
   onContextLost: () => void;
 }
 
@@ -38,18 +36,11 @@ function ProgressDriver({
   return null;
 }
 
-// Phase 5 scene: the rig and the aircraft share one kinematic evaluation;
-// modes blend from the section table at the shared progress.
-export default function Experience({ onContextLost }: ExperienceProps) {
+// Phase 6 scene: store arrives from App (shared with the DOM chapters); the
+// decorative 3D titles duplicate chapter copy and hide inside an aria-hidden
+// canvas container (see .experience-canvas).
+export default function Experience({ store, onContextLost }: ExperienceProps) {
   const flags = useMemo(() => getExperienceFlags(), []);
-  const store = useMemo<ProgressStore>(() => {
-    const initial = createProgressStore();
-    if (flags.progress !== null) {
-      initial.target = flags.progress;
-      initial.current = flags.progress;
-    }
-    return initial;
-  }, [flags]);
   const progressNodeRef = useRef<HTMLDivElement | null>(null);
   const kinematicState = useMemo(() => createAircraftState(), []);
 
@@ -58,27 +49,30 @@ export default function Experience({ onContextLost }: ExperienceProps) {
   return (
     <>
       <ProgressAnnouncer nodeRef={progressNodeRef} />
-      <Canvas
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-        camera={{ fov: 55, near: 0.1, far: 2000, position: [0, 5, 14] }}
-        onCreated={({ gl }) => {
-          gl.toneMapping = THREE.ACESFilmicToneMapping;
-          gl.toneMappingExposure = 1.0;
-          gl.domElement.addEventListener('webglcontextlost', (event) => {
-            event.preventDefault();
-            onContextLost();
-          });
-        }}
-      >
-        <color attach="background" args={['#101a33']} />
-        <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
-        <directionalLight position={[6, 10, 4]} intensity={1.6} />
-        <ProgressDriver store={store} progressNodeRef={progressNodeRef} />
-        <Aircraft store={store} kinematicState={kinematicState} />
-        <CameraRig store={store} kinematicState={kinematicState} />
-        {flags.showPath && <FlightPathDebug />}
-      </Canvas>
+      <div className="experience-canvas" aria-hidden="true">
+        <Canvas
+          dpr={[1, 2]}
+          gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+          camera={{ fov: 55, near: 0.1, far: 2000, position: [0, 5, 14] }}
+          onCreated={({ gl }) => {
+            gl.toneMapping = THREE.ACESFilmicToneMapping;
+            gl.toneMappingExposure = 1.0;
+            gl.domElement.addEventListener('webglcontextlost', (event) => {
+              event.preventDefault();
+              onContextLost();
+            });
+          }}
+        >
+          <color attach="background" args={['#101a33']} />
+          <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
+          <directionalLight position={[6, 10, 4]} intensity={1.6} />
+          <ProgressDriver store={store} progressNodeRef={progressNodeRef} />
+          <Aircraft store={store} kinematicState={kinematicState} />
+          <CameraRig store={store} kinematicState={kinematicState} />
+          <SceneText store={store} />
+          {flags.showPath && <FlightPathDebug />}
+        </Canvas>
+      </div>
     </>
   );
 }

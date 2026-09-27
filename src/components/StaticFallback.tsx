@@ -1,13 +1,14 @@
 import { siteContent } from '../config/content';
+import { experienceSections } from '../config/sections';
 
 interface StaticFallbackProps {
   contextLost: boolean;
 }
 
-// Static accessible fallback: the same content config as the WebGL
-// experience, rendered as a normal responsive document with native scrolling.
-// Shown when WebGL2 is unavailable, forced via ?forceFallback=1, or after a
-// WebGL context loss. Intentional and polished — never an error page.
+// Static accessible fallback: the same section table as the WebGL chapters,
+// rendered as a normal responsive document with native scrolling. Shown when
+// WebGL2 is unavailable, forced via ?forceFallback=1, or after a WebGL
+// context loss. Intentional and polished — never an error page.
 export default function StaticFallback({ contextLost }: StaticFallbackProps) {
   return (
     <main className="fallback">
@@ -21,13 +22,12 @@ export default function StaticFallback({ contextLost }: StaticFallbackProps) {
           </p>
         )}
       </header>
-      <section aria-label="Journey">
-        <h2>The journey</h2>
-        <p>
-          Meridian is a single continuous flight through a procedural sky. Each leg of the route
-          will appear here as it is built — the same words the cinematic version speaks.
-        </p>
-      </section>
+      {experienceSections.map((section) => (
+        <section key={section.id} aria-label={section.title}>
+          <h2>{section.title}</h2>
+          <p>{section.subtitle}</p>
+        </section>
+      ))}
       <section aria-label="Closing">
         <h2>Arrival</h2>
         <p>{siteContent.endingMessage}</p>

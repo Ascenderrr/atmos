@@ -7,6 +7,45 @@
   touch-action: none;
 }
 
+.experience-canvas {
+  position: fixed;
+  inset: 0;
+}
+
+.journey-text {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.journey-text .chapter {
+  position: absolute;
+  left: clamp(1.5rem, 8vw, 7rem);
+  max-width: min(34rem, 78vw);
+  opacity: 0;
+  visibility: hidden;
+  text-wrap: balance;
+}
+
+.journey-text h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  line-height: 1.02;
+  margin: 0 0 0.75rem;
+  text-shadow: 0 2px 32px rgb(4 8 20 / 0.65);
+}
+
+.journey-text p {
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--ink-dim);
+  text-shadow: 0 1px 18px rgb(4 8 20 / 0.7);
+}
+
 .loading {
   min-height: 100vh;
   display: grid;

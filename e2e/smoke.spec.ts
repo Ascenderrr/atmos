@@ -22,7 +22,8 @@ test('?forceFallback=1 renders the static fallback with core content', async ({ 
   page.on('pageerror', (error) => errors.push(String(error)));
 
   await page.goto('/?forceFallback=1');
-  await expect(page.getByRole('heading', { name: 'Meridian' })).toBeVisible();
+  await expect(page.locator('.fallback-hero h1')).toHaveText('Meridian');
+  await expect(page.getByRole('heading', { name: 'Crosswind' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Arrival' })).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -89,4 +90,32 @@ test('camera modes render along the route without errors', async ({ page }) => {
     await expect(page.locator('.experience canvas')).toBeVisible();
   }
   expect(errors).toEqual([]);
+});
+
+async function chapterOpacity(page: Page, chapter: string): Promise<number> {
+  const value = await page.evaluate((id) => {
+    const element = document.querySelector(`[data-chapter="${id}"]`);
+    return element ? getComputedStyle(element).opacity : 'missing';
+  }, chapter);
+  return Number(value);
+}
+
+test('chapters fade in and out with progress', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(String(error)));
+
+  await page.goto('/?progress=0.2');
+  await expect.poll(() => chapterOpacity(page, 'takeoff'), { timeout: 5000 }).toBeGreaterThan(0.9);
+  expect(await chapterOpacity(page, 'intro')).toBeLessThan(0.1);
+
+  await page.goto('/?progress=0.57');
+  await expect.poll(() => chapterOpacity(page, 'flight-2'), { timeout: 5000 }).toBeGreaterThan(0.9);
+  expect(await chapterOpacity(page, 'takeoff')).toBeLessThan(0.1);
+  expect(errors).toEqual([]);
+});
+
+test('decorative canvas is hidden from assistive technology', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.experience-canvas')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuemax', '100');
 });
