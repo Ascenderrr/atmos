@@ -1,29 +1,43 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import Aircraft from '../experience/Aircraft';
 import FlightPathDebug from '../experience/FlightPathDebug';
+import ProgressAnnouncer from '../components/ProgressAnnouncer';
 import {
   createProgressStore,
   updateProgress,
   type ProgressStore,
 } from '../animation/progressStore';
 import { progressSmoothing } from '../config/scene';
+import { useScrollProgress } from '../hooks/useScrollProgress';
 import { getExperienceFlags } from '../utils/searchParams';
 
 interface ExperienceProps {
   onContextLost: () => void;
 }
 
-function ProgressDriver({ store }: { store: ProgressStore }) {
+function ProgressDriver({
+  store,
+  progressNodeRef,
+}: {
+  store: ProgressStore;
+  progressNodeRef: RefObject<HTMLDivElement | null>;
+}) {
+  const lastPercent = useRef(-1);
   useFrame((_, rawDelta) => {
     updateProgress(store, Math.min(rawDelta, 0.1), progressSmoothing);
+    const percent = Math.round(store.current * 100);
+    if (percent !== lastPercent.current) {
+      lastPercent.current = percent;
+      progressNodeRef.current?.setAttribute('aria-valuenow', String(percent));
+    }
   });
   return null;
 }
 
-// Phase 3 scene: the aircraft flies the configured spline from the shared
-// progress store (inputs arrive in Phase 4; ?progress= sets it for tests).
+// Phase 4 scene: all input devices feed the shared store; damping and the
+// screen-reader announcement update here each frame.
 export default function Experience({ onContextLost }: ExperienceProps) {
   const flags = useMemo(() => getExperienceFlags(), []);
   const store = useMemo<ProgressStore>(() => {
@@ -34,27 +48,33 @@ export default function Experience({ onContextLost }: ExperienceProps) {
     }
     return initial;
   }, [flags]);
+  const progressNodeRef = useRef<HTMLDivElement | null>(null);
+
+  useScrollProgress(store, true);
 
   return (
-    <Canvas
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-      camera={{ fov: 55, near: 0.1, far: 2000, position: [0, 5, 14] }}
-      onCreated={({ gl }) => {
-        gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.0;
-        gl.domElement.addEventListener('webglcontextlost', (event) => {
-          event.preventDefault();
-          onContextLost();
-        });
-      }}
-    >
-      <color attach="background" args={['#101a33']} />
-      <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
-      <directionalLight position={[6, 10, 4]} intensity={1.6} />
-      <ProgressDriver store={store} />
-      <Aircraft store={store} />
-      {flags.showPath && <FlightPathDebug />}
-    </Canvas>
+    <>
+      <ProgressAnnouncer nodeRef={progressNodeRef} />
+      <Canvas
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        camera={{ fov: 55, near: 0.1, far: 2000, position: [0, 5, 14] }}
+        onCreated={({ gl }) => {
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.0;
+          gl.domElement.addEventListener('webglcontextlost', (event) => {
+            event.preventDefault();
+            onContextLost();
+          });
+        }}
+      >
+        <color attach="background" args={['#101a33']} />
+        <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
+        <directionalLight position={[6, 10, 4]} intensity={1.6} />
+        <ProgressDriver store={store} progressNodeRef={progressNodeRef} />
+        <Aircraft store={store} />
+        {flags.showPath && <FlightPathDebug />}
+      </Canvas>
+    </>
   );
 }

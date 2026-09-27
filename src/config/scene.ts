@@ -76,5 +76,24 @@ export const aircraftConfig: AircraftConfig = {
   idleFrequency: 0.9,
 };
 
-/** Damping rate for currentProgress → targetProgress. Inputs arrive in Phase 4. */
+/** Damping rate for currentProgress → targetProgress. */
 export const progressSmoothing = 4.5;
+
+export interface ProgressInputConfig {
+  /** Wheel travel (px) for a full 0→1 journey. Trackpads work through the same mapping. */
+  wheelPixelsForFullJourney: number;
+  /** Per-event clamp (px): one accidental spike can never jump the journey. */
+  maxWheelDeltaPx: number;
+  keyboardStep: number;
+  keyboardPageStep: number;
+  /** Touch travel (px) for a full journey. */
+  touchPixelsForFullJourney: number;
+}
+
+export const progressInputConfig: ProgressInputConfig = {
+  wheelPixelsForFullJourney: 6000,
+  maxWheelDeltaPx: 240,
+  keyboardStep: 0.045,
+  keyboardPageStep: 0.16,
+  touchPixelsForFullJourney: 3000,
+};

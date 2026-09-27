@@ -37,7 +37,15 @@
   Phase 5; main-bundle chunk warning carries over (code-split in Phase 10).
 - Commit: `phase 3: add aircraft and flight path`
 
-## Phase 4 — Progress System — NOT STARTED
+## Phase 4 — Progress System — VERIFIED (2026-09-27)
+
+- Verification performed: unit 29/29 (delta-mode normalization, per-event clamp, key map incl.
+  Home/End, touch mapping, damping convergence/clamping, background-delta immunity); e2e 6/6 —
+  real wheel gestures advance progress with zero page scroll, `End`→100 / `Home`→0 predictably,
+  a 100000px synthetic spike settles at ~4% (clamp holds); `format`/`lint`/`typecheck`/`build` clean.
+- Known issues: touch verified by mapping unit tests only (no mobile lab here — re-verify in
+  Phase 11 viewports); `enabled` gate wired for the Phase 10 state machine.
+- Commit: `phase 4: add progress input system`
 
 ## Phase 5 — Camera — NOT STARTED
 
