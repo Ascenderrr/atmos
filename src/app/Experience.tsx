@@ -5,6 +5,7 @@ import Aircraft from '../experience/Aircraft';
 import Atmosphere from '../experience/Atmosphere';
 import CameraRig from '../experience/CameraRig';
 import Clouds from '../experience/Clouds';
+import Effects from '../experience/Effects';
 import Environment from '../experience/Environment';
 import FlightPathDebug from '../experience/FlightPathDebug';
 import SceneText from '../experience/SceneText';
@@ -13,6 +14,7 @@ import ProgressAnnouncer from '../components/ProgressAnnouncer';
 import { updateProgress, type ProgressStore } from '../animation/progressStore';
 import { createAircraftState } from '../experience/aircraftKinematics';
 import { progressSmoothing } from '../config/scene';
+import { detectQualityEnvironment, resolveQualityTier } from '../renderer/quality';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { getExperienceFlags } from '../utils/searchParams';
 
@@ -40,11 +42,14 @@ function ProgressDriver({
   return null;
 }
 
-// Phase 6 scene: store arrives from App (shared with the DOM chapters); the
-// decorative 3D titles duplicate chapter copy and hide inside an aria-hidden
-// canvas container (see .experience-canvas).
+// Phase 8 scene: post-processing joins behind the scene contents; the tier
+// resolves once per load (override, touch/small-screen heuristic, desktop).
 export default function Experience({ store, onContextLost }: ExperienceProps) {
   const flags = useMemo(() => getExperienceFlags(), []);
+  const tier = useMemo(
+    () => resolveQualityTier(flags.quality, detectQualityEnvironment()),
+    [flags],
+  );
   const progressNodeRef = useRef<HTMLDivElement | null>(null);
   const kinematicState = useMemo(() => createAircraftState(), []);
 
@@ -77,6 +82,7 @@ export default function Experience({ store, onContextLost }: ExperienceProps) {
           <CameraRig store={store} kinematicState={kinematicState} />
           <SceneText store={store} />
           {flags.showPath && <FlightPathDebug />}
+          <Effects tier={tier} />
         </Canvas>
       </div>
     </>

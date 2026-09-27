@@ -84,7 +84,15 @@
   in Phase 15); scene still shader + craft + text only — post-processing lands in Phase 8.
 - Commit: `phase 7: add atmosphere`
 
-## Phase 8 — Post-processing — NOT STARTED
+## Phase 8 — Post-processing — VERIFIED (2026-09-27)
+
+- Verification performed: unit 54/54 (tier resolution incl. SSR safety, effect ladder);
+  high-vs-low screenshots tone-match (composer preserves the ACES pipeline — no extra
+  ToneMapping needed); vignette corner falloff confirmed on high; e2e 10/10 incl. all three
+  tiers rendering with zero page errors; `format`/`lint`/`typecheck`/`build` clean.
+- Known issues: bloom is deliberately subtle at these settings (sun out of frame at the
+  sampled angle); low-tier and mobile DPR caps/auto-degrade land in Phase 13.
+- Commit: `phase 8: add post-processing`
 
 ## Phase 9 — Audio — NOT STARTED
 

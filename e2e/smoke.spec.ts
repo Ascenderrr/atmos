@@ -92,6 +92,17 @@ test('camera modes render along the route without errors', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+test('quality tiers render without errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(String(error)));
+
+  for (const quality of ['low', 'medium', 'high']) {
+    await page.goto(`/?progress=0.4&quality=${quality}`);
+    await expect(page.locator('.experience canvas')).toBeVisible();
+  }
+  expect(errors).toEqual([]);
+});
+
 async function chapterOpacity(page: Page, chapter: string): Promise<number> {
   const value = await page.evaluate((id) => {
     const element = document.querySelector(`[data-chapter="${id}"]`);

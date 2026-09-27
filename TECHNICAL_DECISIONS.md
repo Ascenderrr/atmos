@@ -41,6 +41,13 @@ and is the only place allowed to revisit it.
 The custom sky shader appends `tonemapping_fragment` + `colorspace_fragment`
 so uniform colors travel the same pipeline as built-in materials.
 
+Post-processing (Phase 8): only Bloom (sun/bright-cloud glow) and Vignette
+(frame focus) — each with a documented purpose; chromatic aberration, DoF, and
+motion blur rejected as unjustified cost. HIGH = both, MEDIUM = vignette only,
+LOW = direct render. Verified empirically that the composer path tone-matches
+the direct path, so no extra ToneMapping effect is needed. DPR caps and
+auto-degrade belong to Phase 13, not here.
+
 ## Lint: react-hooks/immutability vs frame loops (Phase 7)
 
 Per-frame mutation of Three.js GPU objects (uniforms, fog, material colors,
