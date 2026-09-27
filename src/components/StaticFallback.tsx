@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { siteContent } from '../config/content';
 import { experienceSections } from '../config/sections';
 
@@ -10,11 +11,19 @@ interface StaticFallbackProps {
 // WebGL2 is unavailable, forced via ?forceFallback=1, or after a WebGL
 // context loss. Intentional and polished — never an error page.
 export default function StaticFallback({ contextLost }: StaticFallbackProps) {
+  // Move keyboard/screen-reader focus to the content on arrival (skip/error
+  // switches trees, which would otherwise drop focus to <body>).
+  const focusHeading = useCallback((element: HTMLHeadingElement | null) => {
+    element?.focus({ preventScroll: true });
+  }, []);
+
   return (
     <main className="fallback">
       <header className="fallback-hero">
         <p className="kicker">{siteContent.kicker}</p>
-        <h1>{siteContent.heroTitle}</h1>
+        <h1 ref={focusHeading} tabIndex={-1}>
+          {siteContent.heroTitle}
+        </h1>
         <p className="lede">{siteContent.heroLede}</p>
         {contextLost && (
           <p role="alert" className="fallback-notice">

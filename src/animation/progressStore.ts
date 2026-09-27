@@ -19,6 +19,13 @@ export function setProgressTarget(store: ProgressStore, value: number): void {
   store.target = clamp01(value);
 }
 
+/** Snap both ends of the model (replay/reset). The only writer besides damping. */
+export function snapProgress(store: ProgressStore, value: number): void {
+  const clamped = clamp01(value);
+  store.target = clamped;
+  store.current = clamped;
+}
+
 /** Advance `current` toward `target` with frame-rate-independent damping. */
 export function updateProgress(
   store: ProgressStore,

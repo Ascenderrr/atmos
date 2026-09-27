@@ -20,6 +20,8 @@ import { getExperienceFlags } from '../utils/searchParams';
 
 interface ExperienceProps {
   store: ProgressStore;
+  inputActive: boolean;
+  onActivity: () => void;
   onContextLost: () => void;
 }
 
@@ -44,7 +46,12 @@ function ProgressDriver({
 
 // Phase 8 scene: post-processing joins behind the scene contents; the tier
 // resolves once per load (override, touch/small-screen heuristic, desktop).
-export default function Experience({ store, onContextLost }: ExperienceProps) {
+export default function Experience({
+  store,
+  inputActive,
+  onActivity,
+  onContextLost,
+}: ExperienceProps) {
   const flags = useMemo(() => getExperienceFlags(), []);
   const tier = useMemo(
     () => resolveQualityTier(flags.quality, detectQualityEnvironment()),
@@ -53,7 +60,7 @@ export default function Experience({ store, onContextLost }: ExperienceProps) {
   const progressNodeRef = useRef<HTMLDivElement | null>(null);
   const kinematicState = useMemo(() => createAircraftState(), []);
 
-  useScrollProgress(store, true);
+  useScrollProgress(store, inputActive, onActivity);
 
   return (
     <>

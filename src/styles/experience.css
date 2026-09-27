@@ -103,3 +103,135 @@
   padding-left: 1rem;
   color: var(--ink-dim);
 }
+
+.start-screen,
+.end-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgb(5 8 18 / 0.72), rgb(5 8 18 / 0.55));
+}
+
+.start-inner,
+.end-inner {
+  max-width: 40rem;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.start-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  line-height: 1;
+  margin: 0.5rem 0 1rem;
+}
+
+.end-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  margin: 0 0 1rem;
+}
+
+.start-actions,
+.end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+button.primary {
+  font: inherit;
+  font-weight: 600;
+  color: #0b1030;
+  background: #9db8ff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+}
+
+button.primary:hover {
+  background: #c3d2ff;
+}
+
+button.quiet {
+  font: inherit;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid rgb(170 180 212 / 0.4);
+  border-radius: 999px;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+}
+
+button.quiet:hover {
+  color: var(--ink);
+  border-color: var(--ink-dim);
+}
+
+.overlay-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--ink-dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  text-shadow: 0 1px 14px rgb(4 8 20 / 0.8);
+}
+
+.overlay-controls {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.overlay-controls .quiet {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.sound-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sound-toggle button {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  background: rgb(10 16 34 / 0.6);
+  border: 1px solid rgb(170 180 212 / 0.4);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.sound-toggle button:hover {
+  color: var(--ink);
+}
+
+.sound-toggle button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}

@@ -9,6 +9,8 @@ export interface SiteContent {
   heroLede: string;
   buildNote: string;
   scrollHint: string;
+  beginLabel: string;
+  replayLabel: string;
   skipLabel: string;
   endingMessage: string;
 }
@@ -19,6 +21,8 @@ export const siteContent: SiteContent = {
   heroLede: 'One continuous flight through a procedural sky. Scroll to travel.',
   buildNote: 'Experience under construction — the journey assembles phase by phase.',
   scrollHint: 'Scroll to begin the journey',
+  beginLabel: 'Begin the flight',
+  replayLabel: 'Fly again',
   skipLabel: 'Skip animation and view text version',
   endingMessage: 'Thank you for flying Meridian. The sky keeps the rest.',
 };

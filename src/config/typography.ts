@@ -14,7 +14,7 @@ export interface TypographyTiming {
 }
 
 export const typographyTimings: Record<string, TypographyTiming> = {
-  intro: { enterStart: 0, enterEnd: 0.03, exitStart: 0.07, exitEnd: 0.095, risePx: 48 },
+  intro: { enterStart: -0.02, enterEnd: 0.03, exitStart: 0.07, exitEnd: 0.095, risePx: 48 },
   takeoff: { enterStart: 0.12, enterEnd: 0.17, exitStart: 0.21, exitEnd: 0.24, risePx: 48 },
   'flight-1': { enterStart: 0.28, enterEnd: 0.34, exitStart: 0.4, exitEnd: 0.44, risePx: 48 },
   'flight-2': { enterStart: 0.48, enterEnd: 0.54, exitStart: 0.6, exitEnd: 0.64, risePx: 48 },

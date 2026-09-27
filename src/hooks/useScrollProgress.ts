@@ -9,10 +9,14 @@ import { progressInputConfig } from '../config/scene';
 import { clamp } from '../utils/clamp';
 
 // Funnels every input device into the shared progress store's target.
-// The experience state machine gates `enabled` (Phase 10); until then the
-// journey always listens. Listeners are native (non-passive where we must
-// preventDefault) and fully cleaned up.
-export function useScrollProgress(store: ProgressStore, enabled: boolean): void {
+// The experience state machine gates `enabled`; `onActivity` fires on any
+// applied input so INTRO can yield to the first gesture. Listeners are native
+// (non-passive where we must preventDefault) and fully cleaned up.
+export function useScrollProgress(
+  store: ProgressStore,
+  enabled: boolean,
+  onActivity?: () => void,
+): void {
   useEffect(() => {
     if (!enabled || typeof window === 'undefined') {
       return;
@@ -24,6 +28,7 @@ export function useScrollProgress(store: ProgressStore, enabled: boolean): void 
       const px = normalizeWheelDeltaPx(event.deltaY, event.deltaMode, window.innerHeight);
       const clamped = clamp(px, -config.maxWheelDeltaPx, config.maxWheelDeltaPx);
       setProgressTarget(store, store.target + clamped / config.wheelPixelsForFullJourney);
+      onActivity?.();
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -46,6 +51,7 @@ export function useScrollProgress(store: ProgressStore, enabled: boolean): void 
       }
       event.preventDefault();
       setProgressTarget(store, action.kind === 'set' ? action.value : store.target + action.value);
+      onActivity?.();
     };
 
     let lastTouchY: number | null = null;
@@ -60,6 +66,7 @@ export function useScrollProgress(store: ProgressStore, enabled: boolean): void 
       const y = event.touches[0].clientY;
       setProgressTarget(store, store.target + touchSwipeToProgress(lastTouchY, y, config));
       lastTouchY = y;
+      onActivity?.();
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
@@ -72,5 +79,5 @@ export function useScrollProgress(store: ProgressStore, enabled: boolean): void 
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
     };
-  }, [store, enabled]);
+  }, [store, enabled, onActivity]);
 }
