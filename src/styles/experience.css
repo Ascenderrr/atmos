@@ -1,0 +1,65 @@
+.experience,
+.experience canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.loading {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.loading-pulse {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle, #7ea2ff 0%, transparent 70%);
+  animation: loading-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.fallback {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 12vh 1.5rem 6rem;
+  line-height: 1.6;
+}
+
+.fallback-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  margin: 0.5rem 0;
+  line-height: 1;
+}
+
+.fallback section {
+  margin-top: 3.5rem;
+}
+
+.fallback h2 {
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+}
+
+.fallback-notice {
+  border-left: 3px solid #ffd166;
+  padding-left: 1rem;
+  color: var(--ink-dim);
+}

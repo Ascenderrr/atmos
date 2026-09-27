@@ -31,6 +31,13 @@ capability detection before init and an immediate static fallback. WebGPU-only
 APIs are excluded for broad compatibility with the chosen post-processing
 stack. Revisit only as a deliberate future migration.
 
+## Color management (Phase 2)
+
+Three r152+ defaults (sRGB output color space) with `ACESFilmicToneMapping`
+at exposure 1.0, set once in `Experience` `onCreated`. DOM overlays author
+against the same palette; post-processing (Phase 8) must preserve this chain
+and is the only place allowed to revisit it.
+
 ## Scroll architecture: custom normalized progress, no Lenis
 
 `targetProgress` (0→1) ← user input; `currentProgress` damps toward it in

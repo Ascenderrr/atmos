@@ -17,7 +17,14 @@
 - Known issues: none blocking. Playwright browsers installed locally (not committed); CI installs them.
 - Commit: `phase 1: add project foundation`
 
-## Phase 2 — WebGL Foundation — NOT STARTED
+## Phase 2 — WebGL Foundation — VERIFIED (2026-09-27)
+
+- Verification performed: R3F Canvas mounts a visible WebGL canvas with zero page errors (Chromium e2e);
+  `?forceFallback=1` renders the static fallback with core content; WebGL2 probe + context-loss →
+  fallback recovery wired; `format:check`/`lint`/`typecheck`/`build` clean; unit 9/9; e2e 2/2.
+- Known issues: main-bundle chunk-size warning (three.js; code-splitting lands with lazy loading in
+  Phase 10); rendered pixels not eyeballed — full visual QA deferred to Phase 15 per plan.
+- Commit: `phase 2: add webgl foundation`
 
 ## Phase 3 — Aircraft — NOT STARTED
 

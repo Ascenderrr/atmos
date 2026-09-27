@@ -4,6 +4,7 @@ import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/fraunces';
 import './styles/globals.css';
 import './styles/accessibility.css';
+import './styles/experience.css';
 import App from './App';
 
 const rootEl = document.getElementById('root');
