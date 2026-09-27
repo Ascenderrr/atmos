@@ -2,6 +2,7 @@ import { useMemo, useRef, type RefObject } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import Aircraft from '../experience/Aircraft';
+import CameraRig from '../experience/CameraRig';
 import FlightPathDebug from '../experience/FlightPathDebug';
 import ProgressAnnouncer from '../components/ProgressAnnouncer';
 import {
@@ -9,6 +10,7 @@ import {
   updateProgress,
   type ProgressStore,
 } from '../animation/progressStore';
+import { createAircraftState } from '../experience/aircraftKinematics';
 import { progressSmoothing } from '../config/scene';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { getExperienceFlags } from '../utils/searchParams';
@@ -36,8 +38,8 @@ function ProgressDriver({
   return null;
 }
 
-// Phase 4 scene: all input devices feed the shared store; damping and the
-// screen-reader announcement update here each frame.
+// Phase 5 scene: the rig and the aircraft share one kinematic evaluation;
+// modes blend from the section table at the shared progress.
 export default function Experience({ onContextLost }: ExperienceProps) {
   const flags = useMemo(() => getExperienceFlags(), []);
   const store = useMemo<ProgressStore>(() => {
@@ -49,6 +51,7 @@ export default function Experience({ onContextLost }: ExperienceProps) {
     return initial;
   }, [flags]);
   const progressNodeRef = useRef<HTMLDivElement | null>(null);
+  const kinematicState = useMemo(() => createAircraftState(), []);
 
   useScrollProgress(store, true);
 
@@ -72,7 +75,8 @@ export default function Experience({ onContextLost }: ExperienceProps) {
         <hemisphereLight args={['#bcd0ff', '#1a2340', 0.9]} />
         <directionalLight position={[6, 10, 4]} intensity={1.6} />
         <ProgressDriver store={store} progressNodeRef={progressNodeRef} />
-        <Aircraft store={store} />
+        <Aircraft store={store} kinematicState={kinematicState} />
+        <CameraRig store={store} kinematicState={kinematicState} />
         {flags.showPath && <FlightPathDebug />}
       </Canvas>
     </>

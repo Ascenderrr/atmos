@@ -79,3 +79,14 @@ test('a single giant wheel spike cannot jump the journey', async ({ page }) => {
   expect(await progressValue(page)).toBeLessThanOrEqual(12);
   expect(errors).toEqual([]);
 });
+
+test('camera modes render along the route without errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(String(error)));
+
+  for (const progress of ['0.35', '0.55', '0.9']) {
+    await page.goto(`/?progress=${progress}`);
+    await expect(page.locator('.experience canvas')).toBeVisible();
+  }
+  expect(errors).toEqual([]);
+});

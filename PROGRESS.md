@@ -47,7 +47,16 @@
   Phase 11 viewports); `enabled` gate wired for the Phase 10 state machine.
 - Commit: `phase 4: add progress input system`
 
-## Phase 5 — Camera — NOT STARTED
+## Phase 5 — Camera — VERIFIED (2026-09-27)
+
+- Verification performed: unit 36/36 (blend weights sum to 1 incl. ends/boundaries, 160-sample
+  route sweep bounded + NaN-free, mode resolution, snap init); 4 compositions eyeballed (wide,
+  elevated, side, finale + close after a look-ahead fix); `format`/`lint`/`typecheck`/`build`
+  clean; e2e 7/7 with zero page errors.
+- Fixes from visual QA: side/close look-ahead retargeted onto the craft (was pushing it to the
+  frame edge); verified centered afterward.
+- Known issues: framing tuned against placeholder craft scale — re-check if aircraft scale changes.
+- Commit: `phase 5: add camera rig`
 
 ## Phase 6 — Typography — NOT STARTED
 

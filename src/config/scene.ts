@@ -97,3 +97,83 @@ export const progressInputConfig: ProgressInputConfig = {
   keyboardPageStep: 0.16,
   touchPixelsForFullJourney: 3000,
 };
+
+export type CameraMode = 'wide' | 'chase' | 'elevated' | 'side' | 'close' | 'finale';
+
+export interface CameraModeConfig {
+  /** Aircraft-local offset (nose = +Z): right, up, forward. */
+  positionOffset: Vec3Tuple;
+  /** World-space offset added to the look target. */
+  lookAtOffset: Vec3Tuple;
+  /** Distance ahead of the aircraft along the tangent that the camera anticipates. */
+  lookAhead: number;
+  fov: number;
+  positionStrength: number;
+  lookStrength: number;
+  fovStrength: number;
+  /** Blend half-width (progress units) shared with the neighboring mode. */
+  transitionRange: number;
+}
+
+export const cameraModes: Record<CameraMode, CameraModeConfig> = {
+  wide: {
+    positionOffset: [0, 6, -20],
+    lookAtOffset: [0, 1.5, 0],
+    lookAhead: 14,
+    fov: 60,
+    positionStrength: 2.2,
+    lookStrength: 3,
+    fovStrength: 2.5,
+    transitionRange: 0.05,
+  },
+  chase: {
+    positionOffset: [0, 2.4, -8],
+    lookAtOffset: [0, 1, 0],
+    lookAhead: 12,
+    fov: 55,
+    positionStrength: 3,
+    lookStrength: 4,
+    fovStrength: 2.5,
+    transitionRange: 0.04,
+  },
+  elevated: {
+    positionOffset: [-6, 9, -12],
+    lookAtOffset: [0, 1, 0],
+    lookAhead: 10,
+    fov: 55,
+    positionStrength: 2.6,
+    lookStrength: 3.5,
+    fovStrength: 2.5,
+    transitionRange: 0.04,
+  },
+  side: {
+    positionOffset: [11, 1.2, -1],
+    lookAtOffset: [0, 0.8, 0],
+    lookAhead: 1.5,
+    fov: 50,
+    positionStrength: 2.6,
+    lookStrength: 3.5,
+    fovStrength: 2.5,
+    transitionRange: 0.05,
+  },
+  close: {
+    positionOffset: [3.2, 1.1, 4.5],
+    lookAtOffset: [0, 0.4, 0],
+    lookAhead: 1,
+    fov: 58,
+    positionStrength: 3.2,
+    lookStrength: 4.5,
+    fovStrength: 2.5,
+    transitionRange: 0.04,
+  },
+  finale: {
+    positionOffset: [0, 3, 14],
+    lookAtOffset: [0, 1, 0],
+    lookAhead: 10,
+    fov: 52,
+    positionStrength: 2.4,
+    lookStrength: 3.2,
+    fovStrength: 2.5,
+    transitionRange: 0.06,
+  },
+};

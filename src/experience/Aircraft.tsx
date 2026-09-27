@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { aircraftConfig, type AircraftConfig } from '../config/scene';
 import { getFlightCurve } from './FlightPath';
 import { createAircraftState, evaluateAircraft } from './aircraftKinematics';
+import type { AircraftKinematicState } from './aircraftKinematics';
 import type { ProgressStore } from '../animation/progressStore';
 
 // Catches GLB load failures (optional asset) and falls back to procedural geometry.
@@ -117,17 +118,26 @@ function PlaceholderAircraft() {
 
 interface AircraftProps {
   store: ProgressStore;
+  kinematicState?: AircraftKinematicState;
   config?: AircraftConfig;
 }
 
 // Flight-system owner for the craft: evaluates the spline every frame and
 // applies position/quaternion to one group. Placeholder and future GLB modes
 // share this path — swapping modes never touches flight math.
-export default function Aircraft({ store, config = aircraftConfig }: AircraftProps) {
+export default function Aircraft({
+  store,
+  kinematicState,
+  config = aircraftConfig,
+}: AircraftProps) {
   const group = useRef<THREE.Group>(null!);
-  const kinematicState = useMemo(() => createAircraftState(), []);
+  const fallbackState = useMemo(() => createAircraftState(), []);
+  // Shared with the camera rig when provided, so both read one evaluation.
+  const state = kinematicState ?? fallbackState;
   const curve = useMemo(() => getFlightCurve(), []);
 
+  // Priority -1: the shared kinematic state is written before the camera rig
+  // (priority 0) reads it each frame.
   useFrame(({ clock }, rawDelta) => {
     const pose = evaluateAircraft(
       curve,
@@ -135,11 +145,11 @@ export default function Aircraft({ store, config = aircraftConfig }: AircraftPro
       clock.elapsedTime,
       Math.min(rawDelta, 0.1),
       config,
-      kinematicState,
+      state,
     );
     group.current.position.copy(pose.position);
     group.current.quaternion.copy(pose.quaternion);
-  });
+  }, -1);
 
   return (
     <group ref={group} scale={config.aircraftScale}>
